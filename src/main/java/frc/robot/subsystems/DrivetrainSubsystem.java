@@ -39,8 +39,8 @@ public class DrivetrainSubsystem extends SubsystemBase {
    * <p>
    * This is a measure of how fast the robot should be able to drive in a straight line.
    */
-  //TODO: get motor free speed RPM and correct module configuration
-  public static final double MAX_VELOCITY_METERS_PER_SECOND = 5880.0 / 60.0 *
+  //TODO: get motor free speed RPM 
+  public static final double MAX_VELOCITY_METERS_PER_SECOND = 100.0 / 60.0 *
    SdsModuleConfigurations.MK4I_L1.getDriveReduction() * SdsModuleConfigurations.MK4I_L1.getWheelDiameter() * Math.PI;
   
 //   6380.0 / 60.0 *
