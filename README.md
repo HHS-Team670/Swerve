@@ -31,3 +31,12 @@ our encoder values displayed to the dashboard.
 5. Re-deploy and try to drive the robot forwards. All wheels should stay parallel to each other.
 6. Make sure all the wheels are spinning in the correct direction. If not, add 180 degrees to the offset of each wheel 
 that is spinning in the incorrect direction. (I.e. `-Math.toRadians(<angle> + 180.0))`)
+
+
+Swerve Configuration
+
+1. Set CAN ID for motor controller(20-27, odd drive, even steer) and encoders(30-36, even)
+    Use Phoenix Tuner
+2. Tune the encoders set them to absolute(some fancy position thing)
+        Make sure they flash green :)) orange would suffice thou
+3. Set motor velocity limit very low to begin with
