@@ -28,23 +28,29 @@ public final class Constants {
 
     public static final double LIMIT = 0.05;
 
-    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 21; //  Set front left module drive motor ID
-    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 20; //  Set front left module steer motor ID
-    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 30; //  Set front left steer encoder ID
-    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(74.79); //   Measure and set front left steer offset
+    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 21; //  Set front left module drive motor ID
+    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 20; //  Set front left module steer motor ID
+    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 30; //  Set front left steer encoder ID
+    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = Math.toRadians(-74.79); //   Measure and set front left steer offset
+    //public static final double FRONT_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0); //   Measure and set front left steer offset
 
-    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 23; //  Set front right drive motor ID
-    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 22; //  Set front right steer motor ID
-    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 32; //  Set front right steer encoder ID
-    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(31.7285); //  Measure and set front right steer offset
+    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 23; //  Set front right drive motor ID
+    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 22; //  Set front right steer motor ID
+    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 32; //  Set front right steer encoder ID
+    public static final double BACK_LEFT_MODULE_STEER_OFFSET = Math.toRadians(-31.7285); //  Measure and set front right steer offset
+    //public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0); //  Measure and set front right steer offset
 
-    public static final int BACK_LEFT_MODULE_DRIVE_MOTOR = 27; //  Set back left drive motor ID
-    public static final int BACK_LEFT_MODULE_STEER_MOTOR = 26; //  Set back left steer motor ID
-    public static final int BACK_LEFT_MODULE_STEER_ENCODER = 36; //  Set back left steer encoder ID
-    public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(320.3613); //  Measure and set back left steer offset
+    public static final int FRONT_RIGHT_MODULE_DRIVE_MOTOR = 27; //  Set back left drive motor ID
+    public static final int FRONT_RIGHT_MODULE_STEER_MOTOR = 26; //  Set back left steer motor ID
+    public static final int FRONT_RIGHT_MODULE_STEER_ENCODER = 36; //  Set back left steer encoder ID
+    public static final double FRONT_RIGHT_MODULE_STEER_OFFSET = Math.toRadians(320.3613); //  Measure and set back left steer offset
+    //public static final double BACK_LEFT_MODULE_STEER_OFFSET = -Math.toRadians(0); //  Measure and set back left steer offset
 
-    public static final int BACK_RIGHT_MODULE_DRIVE_MOTOR = 25; //  Set back right drive motor ID
-    public static final int BACK_RIGHT_MODULE_STEER_MOTOR = 24; //  Set back right steer motor ID
-    public static final int BACK_RIGHT_MODULE_STEER_ENCODER = 34; //  Set back right steer encoder ID
-    public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(292.9394); //  Measure and set back right steer offset
+
+    public static final int FRONT_LEFT_MODULE_DRIVE_MOTOR = 25; //  Set back right drive motor ID
+    public static final int FRONT_LEFT_MODULE_STEER_MOTOR = 24; //  Set back right steer motor ID
+    public static final int FRONT_LEFT_MODULE_STEER_ENCODER = 34; //  Set back right steer encoder ID
+    public static final double FRONT_LEFT_MODULE_STEER_OFFSET = Math.toRadians(292.9394); //  Measure and set back right steer offset
+    //public static final double BACK_RIGHT_MODULE_STEER_OFFSET = -Math.toRadians(0); //  Measure and set back right steer offset
+
 }
