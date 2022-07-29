@@ -12,6 +12,7 @@ public class DefaultDriveCommand extends CommandBase {
     private final DoubleSupplier m_translationXSupplier;
     private final DoubleSupplier m_translationYSupplier;
     private final DoubleSupplier m_rotationSupplier;
+    private double prevAngle;
 
     public DefaultDriveCommand(DrivetrainSubsystem drivetrainSubsystem,
                                DoubleSupplier translationXSupplier,
@@ -28,14 +29,24 @@ public class DefaultDriveCommand extends CommandBase {
     @Override
     public void execute() {
         // You can use `new ChassisSpeeds(...)` for robot-oriented movement instead of field-oriented movement
+        double angle = m_rotationSupplier.getAsDouble();
+        double xPos = m_translationXSupplier.getAsDouble();
+        double yPos = m_translationYSupplier.getAsDouble();
+        
+
+        // if (Math.abs(xPos) <= 0.1 && Math.abs(yPos) <= 0.1) {
+        //     angle = prevAngle;
+        // }
         m_drivetrainSubsystem.drive(
                 ChassisSpeeds.fromFieldRelativeSpeeds(
-                        m_translationXSupplier.getAsDouble(),
-                        m_translationYSupplier.getAsDouble(),
-                        m_rotationSupplier.getAsDouble(),
+                        xPos,
+                        yPos,
+                        angle,
                         m_drivetrainSubsystem.getGyroscopeRotation()
                 )
         );
+        
+        //prevAngle = angle;
     }
 
     @Override

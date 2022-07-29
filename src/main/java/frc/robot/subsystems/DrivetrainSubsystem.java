@@ -4,6 +4,7 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.Logger;
 import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.wpilibj.SerialPort;
 import com.swervedrivespecialties.swervelib.Mk4iSwerveModuleHelper;
@@ -81,6 +82,9 @@ public class DrivetrainSubsystem extends SubsystemBase {
   private final SwerveModule m_frontRightModule;
   private final SwerveModule m_backLeftModule;
   private final SwerveModule m_backRightModule;
+
+  private Rotation2d gyroOffset;
+  private double frontLeftPrevAngle, frontRightPrevAngle, backLeftPrevAngle, backRightPrevAngle;
 
   private ChassisSpeeds m_chassisSpeeds = new ChassisSpeeds(0.0, 0.0, 0.0);
 
@@ -166,25 +170,41 @@ public class DrivetrainSubsystem extends SubsystemBase {
   public void zeroGyroscope() {
     // FIXME Remove if you are using a Pigeon
     //m_pigeon.setFusedHeading(0.0);
-
+        SmartDashboard.putString("zeroGyro", "called zeroGyroscope");
+        gyroOffset = getGyroscopeRotation(false);
+        
     // FIXME Uncomment if you are using a NavX
-    m_navx.zeroYaw();
   }
 
   public Rotation2d getGyroscopeRotation() {
-    return Rotation2d.fromDegrees(0);
+          return getGyroscopeRotation(true);
+  }
+  public Rotation2d getGyroscopeRotation(boolean offset) {
+    //return Rotation2d.fromDegrees(0);
 
     // FIXME Remove if you are using a Pigeon
-    // return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());
+    // return Rotation2d.fromDegrees(m_pigeon.getFusedHeading());      
 
     // FIXME Uncomment if you are using a NavX
-//     if (m_navx.isMagnetometerCalibrated()) {
-// //      // We will only get valid fused headings if the magnetometer is calibrated
-//      return Rotation2d.fromDegrees(m_navx.getFusedHeading());
-//     }
+    if (m_navx.isMagnetometerCalibrated()) {
+        
+//      // We will only get valid fused headings if the magnetometer is calibrated
+        if (offset) {
+                Rotation2d angle = Rotation2d.fromDegrees(-m_navx.getFusedHeading()).minus(gyroOffset);
+                
+                //SmartDashboard.putString("navX", angle.toString());
+                return angle;  
+        }
+        return Rotation2d.fromDegrees(-m_navx.getFusedHeading());
+    }
+
+    SmartDashboard.putNumber("navX", m_navx.getYaw()- 360);
 // //
 // //    // We have to invert the angle of the NavX so that rotating the robot counter-clockwise makes the angle increase.
-//     return Rotation2d.fromDegrees(360.0 - m_navx.getYaw());
+        if (offset) {      
+                return Rotation2d.fromDegrees(m_navx.getYaw()-360).minus(gyroOffset);
+        }    
+        return Rotation2d.fromDegrees(m_navx.getYaw()-360);
   }
 
   public void drive(ChassisSpeeds chassisSpeeds) {
@@ -202,6 +222,10 @@ public class DrivetrainSubsystem extends SubsystemBase {
     //tab.getLayout("Chassis speeds", BuiltInLayouts.kList)
     
     SwerveDriveKinematics.desaturateWheelSpeeds(states, MAX_VELOCITY_METERS_PER_SECOND);
+
+    if (gyroOffset == null && !m_navx.isCalibrating()) {
+            zeroGyroscope();
+    }
         
     //VALID ^^^^
 
@@ -209,10 +233,32 @@ public class DrivetrainSubsystem extends SubsystemBase {
 //     m_frontRightModule.set( states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
 //     m_backLeftModule.set(   states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
 //     m_backRightModule.set(  states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
-        m_frontLeftModule.set(  states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[0].angle.getRadians());
-        m_frontRightModule.set( states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[1].angle.getRadians());
-        m_backLeftModule.set(   states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[2].angle.getRadians());
-        m_backRightModule.set(  states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE, states[3].angle.getRadians());
 
+        double frontLeftSpeed = states[0].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
+        double frontRightSpeed = states[1].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
+        double backLeftSpeed = states[2].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
+        double backRightSpeed =  states[3].speedMetersPerSecond / MAX_VELOCITY_METERS_PER_SECOND * MAX_VOLTAGE;
+
+        double frontLeftAngle = states[0].angle.getRadians();
+        double frontRightAngle = states[1].angle.getRadians();
+        double backLeftAngle = states[2].angle.getRadians();
+        double backRightAngle = states[3].angle.getRadians();
+
+        if (Math.abs(frontLeftSpeed) <= 0.01 && Math.abs(frontRightSpeed) <= 0.01 && Math.abs(backLeftSpeed) <= 0.01 && Math.abs(backRightSpeed) <= 0.01) {
+                frontLeftAngle = frontLeftPrevAngle;
+                frontRightAngle = frontRightPrevAngle;
+                backLeftAngle = backLeftPrevAngle;
+                backRightAngle = backRightPrevAngle;
+        } 
+
+        m_frontLeftModule.set(frontLeftSpeed, frontLeftAngle);
+        m_frontRightModule.set(frontRightSpeed, frontRightAngle);
+        m_backLeftModule.set(backLeftSpeed, backLeftAngle);
+        m_backRightModule.set(backRightSpeed, backRightAngle);
+
+        frontLeftPrevAngle = frontLeftAngle;
+        frontRightPrevAngle = frontRightAngle;
+        backLeftPrevAngle = backLeftAngle;
+        backRightPrevAngle = backRightAngle;
    }
 }
